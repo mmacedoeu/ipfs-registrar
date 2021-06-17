@@ -1,0 +1,5 @@
+/target
+# Dependency directories
+contract/node_modules/
+node_modules/
+jspm_packages/

@@ -1,0 +1,22 @@
+[package]
+name = "ipfs-registrar"
+version = "0.1.0"
+authors = ["mmacedoeu <contato@mmacedo.eu.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+structopt = "0.3.8"
+structopt-flags = "0.3.6"
+ipfs-api = { version = "0.11.0"}
+web3 = { version = "0.16.0", features = ["http"], default-features = false}
+anyhow = "1.0"
+hex-literal = "0.3"
+hex = "0.4"
+tokio                     = { version = "1", features = ["full"]}
+cid = { version = "0.7.0" }
+multihash = "0.14.0"
+[dependencies.http]
+version = "0.2"
+
