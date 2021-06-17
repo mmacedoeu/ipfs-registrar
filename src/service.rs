@@ -1,7 +1,7 @@
 use anyhow::{Error, Result};
 use cid::Cid;
 use hex_literal::hex;
-// use http::uri::Scheme;
+use ipfs_api::TryFromUri;
 use ipfs_api::{response::AddResponse, IpfsClient};
 use std::fs::File;
 use std::net::{IpAddr, Ipv4Addr};
@@ -50,19 +50,20 @@ pub async fn set_contract(web3: &Web3<Http>, contract: &Contract<Http>, cid: Tok
 }
 
 pub fn upload(cli: &Cli) -> Result<()> {
-    let _ipfs_port = cli.run.ipfs_port.unwrap_or(5001);
-    let _ipfs_host = cli
+    let ipfs_port = cli.run.ipfs_port.unwrap_or(5001);
+    let ipfs_host = cli
         .run
         .ipfs_host_ip
         .get_with_default(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
     let file = File::open(&cli.filename)?;
 
-    let ipfs_client = IpfsClient::default();
-    // let ipfs_client = IpfsClient::from_host_and_port(
-    //     Scheme::HTTPS,
-    //     format!("{}", ipfs_host).as_str(),
-    //     ipfs_port,
-    // )?;
+    // let ipfs_client = IpfsClient::default();
+    let ip_addr = match ipfs_host {
+        IpAddr::V4(i) => format!("/ip4/{}", i),
+        IpAddr::V6(i) => format!("/ip6/{}", i),
+    };
+    let multiaddr_str = format!("{}/tcp/{}", ip_addr, ipfs_port);
+    let ipfs_client = IpfsClient::from_multiaddr_str(&multiaddr_str)?;
 
     let eth_port = cli.run.eth_port.unwrap_or(7545);
     let eth_host = cli
